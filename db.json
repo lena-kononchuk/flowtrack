@@ -190,9 +190,9 @@
       "name": "Setup video streaming infrastructure",
       "description": "Configure CDN and video hosting for smooth course video delivery with adaptive bitrate streaming",
       "assignee": "James Wilson",
-      "status": "in-progress",
+      "status": "done",
       "dueDate": "2024-05-10",
-      "order": 0
+      "order": 2
     },
     {
       "id": "17",
@@ -200,9 +200,9 @@
       "name": "Build course content management",
       "description": "Create interface for instructors to upload videos, organize chapters, and manage course materials",
       "assignee": "Maria Garcia",
-      "status": "in-progress",
+      "status": "done",
       "dueDate": "2024-05-18",
-      "order": 1
+      "order": 0
     },
     {
       "id": "18",
@@ -210,9 +210,9 @@
       "name": "Implement quiz system",
       "description": "Build quiz builder with multiple question types (multiple choice, true/false, essay) and auto-grading",
       "assignee": "James Wilson",
-      "status": "todo",
+      "status": "done",
       "dueDate": "2024-05-25",
-      "order": 2
+      "order": 1
     },
     {
       "id": "19",
@@ -222,7 +222,7 @@
       "assignee": "Thomas Martinez",
       "status": "todo",
       "dueDate": "2024-06-01",
-      "order": 3
+      "order": 0
     },
     {
       "id": "20",
@@ -232,7 +232,7 @@
       "assignee": "Maria Garcia",
       "status": "todo",
       "dueDate": "2024-06-08",
-      "order": 4
+      "order": 1
     }
   ]
 }

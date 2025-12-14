@@ -4,7 +4,7 @@ A modern task management application built with Vue 3, TypeScript, and Vite. Tra
 
 ##  Live Demo
 
-[View Live Application]
+[View Live Application](https://lena-kononchuk.github.io/flowtrack/)
 
 ##  Features
 
@@ -29,7 +29,7 @@ A modern task management application built with Vue 3, TypeScript, and Vite. Tra
 
 1. Clone the repository:
 ```bash
-git clone 
+git clone  https://lena-kononchuk.github.io/flowtrack/
 cd flowtrack
 ```
 
