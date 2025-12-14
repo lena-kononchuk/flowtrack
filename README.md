@@ -14,7 +14,7 @@ A modern task management application built with Vue 3, TypeScript, and Vite. Tra
 -  Search and filter functionality
 -  Local data persistence
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - **Frontend:** Vue 3, TypeScript, Vite
 - **Styling:** SCSS, Flexboxgrid
@@ -49,7 +49,6 @@ npm run dev:all
 flowtrack/
 ├── src/
 │   ├── api/              # API service layers
-│   ├── assets/           # Static assets (styles, images)
 │   ├── components/       # Vue components
 │   │   ├── common/       # Shared components
 │   │   ├── projects/     # Project-related components
