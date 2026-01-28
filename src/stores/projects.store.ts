@@ -1,3 +1,4 @@
+// src/stores/projects.store.ts
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { projectsApi } from '@/api/projects.api';
@@ -14,18 +15,18 @@ export const useProjectsStore = defineStore('projects', () => {
   async function fetchProjects() {
     loading.value = true;
     error.value = null;
-    
+
     try {
-      const response = await projectsApi.getAll();
-      projects.value = response.data.map(project => ({
+      const data = await projectsApi.getAll();
+      projects.value = data.map(project => ({
         ...project,
-        id: Number(project.id)
+        id: project.id
       }));
       saveToLocalStorage();
-    } catch (err) {
+    } catch (fetchError) {
       error.value = 'Failed to fetch projects';
-      console.error('Fetch projects error:', err);
-      throw err;
+      console.error('Fetch projects error:', fetchError);
+      throw fetchError;
     } finally {
       loading.value = false;
     }
@@ -33,34 +34,29 @@ export const useProjectsStore = defineStore('projects', () => {
 
   /**
    * Create new project
-   * @param data - Project data (name, description, status)
-   * @returns Promise with created project
    */
-  async function createProject(data: { name: string; shortDescription?: string; status: string }) {
+  async function createProject(data: Omit<Project, 'id' | 'createdAt'>) {
     loading.value = true;
     error.value = null;
-    
-    try {
-      // Prepare data for API (without id and createdAt)
-      const apiData = {
-        name: data.name,
-        shortDescription: data.shortDescription,
-        status: data.status as 'pending' | 'active' | 'completed' | 'planned'
-      };
 
-      const response = await projectsApi.create(apiData);
-      
+    try {
+      const response = await projectsApi.create(data);
+
+      if (!response.data.id) {
+        throw new Error('Project created without ID');
+      }
+
       projects.value.push({
         ...response.data,
-        id: Number(response.data.id)
+        id: response.data.id
       });
-      
+
       saveToLocalStorage();
       return response.data;
-    } catch (err) {
+    } catch (createError) {
       error.value = 'Failed to create project';
-      console.error('Create project error:', err);
-      throw err;
+      console.error('Create project error:', createError);
+      throw createError;
     } finally {
       loading.value = false;
     }
@@ -68,32 +64,45 @@ export const useProjectsStore = defineStore('projects', () => {
 
   /**
    * Update existing project
-   * @param id - Project ID
-   * @param updates - Partial project data to update
    */
-  async function updateProject(id: number, updates: Partial<Project>) {
+  async function updateProject(projectId: number | string, updates: Partial<Project>) {
+    if (!projectId) {
+      console.error('Invalid project ID in updateProject:', projectId);
+      return;
+    }
+
     loading.value = true;
     error.value = null;
-    
+
     try {
-      const response = await projectsApi.update(id, updates);
-      
-      // Find and update project in store
-      const index = projects.value.findIndex(p => p.id === id);
-      if (index !== -1) {
-        projects.value[index] = {
-          ...projects.value[index],
-          ...response.data,
-          id: Number(response.data.id)
-        };
-        saveToLocalStorage();
+      const projectIndex = projects.value.findIndex(project => project.id == projectId);
+      if (projectIndex === -1) {
+        throw new Error(`Project with id ${projectId} not found`);
       }
-      
+
+      // Optimistic update
+      projects.value[projectIndex] = {
+        ...projects.value[projectIndex],
+        ...updates,
+        id: projects.value[projectIndex].id
+      };
+      saveToLocalStorage();
+
+      const response = await projectsApi.update(projectId as any, updates);
+
+      projects.value[projectIndex] = {
+        ...projects.value[projectIndex],
+        ...response.data,
+        id: response.data.id
+      };
+      saveToLocalStorage();
+
       return response.data;
-    } catch (err) {
+    } catch (updateError) {
       error.value = 'Failed to update project';
-      console.error('Update project error:', err);
-      throw err;
+      console.error('Update project error:', updateError);
+      await fetchProjects();
+      throw updateError;
     } finally {
       loading.value = false;
     }
@@ -101,27 +110,26 @@ export const useProjectsStore = defineStore('projects', () => {
 
   /**
    * Delete project by ID
-   * @param id - Project ID to delete
    */
-  async function deleteProject(id: number) {
+  async function deleteProject(projectId: number | string) {
     loading.value = true;
     error.value = null;
-    
+
     try {
-      await projectsApi.delete(id);
-      projects.value = projects.value.filter(p => p.id !== id);
+      await projectsApi.delete(projectId as any);
+      projects.value = projects.value.filter(project => project.id != projectId);
       saveToLocalStorage();
-    } catch (err) {
+    } catch (deleteError) {
       error.value = 'Failed to delete project';
-      console.error('Delete project error:', err);
-      throw err;
+      console.error('Delete project error:', deleteError);
+      throw deleteError;
     } finally {
       loading.value = false;
     }
   }
 
   /**
-   * Save projects to localStorage
+   * Save projects to localStorage for persistence
    */
   function saveToLocalStorage() {
     localStorage.setItem('projects', JSON.stringify(projects.value));
@@ -131,18 +139,37 @@ export const useProjectsStore = defineStore('projects', () => {
    * Load projects from localStorage
    */
   function loadFromLocalStorage() {
-    const stored = localStorage.getItem('projects');
-    if (stored) {
+    const storedProjects = localStorage.getItem('projects');
+    if (storedProjects) {
       try {
-        const parsed = JSON.parse(stored);
-        projects.value = parsed.map((project: any) => ({
+        const parsedProjects = JSON.parse(storedProjects);
+        projects.value = parsedProjects.map((project: any) => ({
           ...project,
-          id: Number(project.id)
+          id: project.id
         }));
-      } catch (err) {
-        console.error('Failed to parse projects from localStorage:', err);
+      } catch (parseError) {
+        console.error('Failed to parse projects from localStorage:', parseError);
       }
     }
+  }
+
+  /**
+   * Get project by ID
+   */
+  function getProjectById(id: string) {
+    return projects.value.find(project => project.id.toString() === id.toString());
+  }
+
+  /**
+   * Get task counts for all projects
+   */
+  function getTaskCounts(tasks: any[]) {
+    const counts: Record<string, number> = {};
+    tasks.forEach(task => {
+      const projectId = task.projectId.toString();
+      counts[projectId] = (counts[projectId] || 0) + 1;
+    });
+    return counts;
   }
 
   return {
@@ -153,6 +180,8 @@ export const useProjectsStore = defineStore('projects', () => {
     createProject,
     updateProject,
     deleteProject,
-    loadFromLocalStorage
+    loadFromLocalStorage,
+    getProjectById,
+    getTaskCounts
   };
 });
