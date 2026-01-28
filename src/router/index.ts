@@ -1,9 +1,9 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import ProjectsList from '@/views/ProjectsList.vue';
-import ProjectDetail from '@/views/ProjectDetail.vue';
+import { createRouter, createWebHistory } from 'vue-router'
+import ProjectsList from '@/views/ProjectsList.vue'
+import ProjectDetail from '@/views/ProjectDetail.vue'
 
 const router = createRouter({
-  history: createWebHistory('/FlowBoard/'),
+  history: createWebHistory('/FlowBoard-New/'),
   routes: [
     {
       path: '/',
@@ -16,6 +16,6 @@ const router = createRouter({
       component: ProjectDetail
     }
   ]
-});
+})
 
-export default router;
+export default router
