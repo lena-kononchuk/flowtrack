@@ -3,62 +3,86 @@ import apiClient from './axios.config';
 import type { Task } from '@/types/task.types';
 
 export const tasksApi = {
-  async getAll() {
+  async getAll(): Promise<Task[]> {
+    console.log('📡 [tasksApi.getAll] Called');
+
     if (import.meta.env.PROD) {
-      // On GitHub Pages
+      // Для GitHub Pages
+      const url = '/FlowBoard-New/api/tasks.json';
+      console.log('🌐 [PROD] Fetching from:', url);
+
       try {
-        const response = await fetch('/FlowBoard-New/api/tasks.json');
-        if (!response.ok) throw new Error('Failed to fetch tasks');
-        return await response.json();
+        const response = await fetch(url);
+        console.log('📡 Response status:', response.status);
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('✅ [PROD] Tasks data:', data);
+
+        // УБЕДИТЕСЬ, что возвращаем массив
+        if (!Array.isArray(data)) {
+          console.error('❌ Data is not an array:', data);
+          return [];
+        }
+
+        return data;
       } catch (error) {
-        console.error('Error fetching tasks:', error);
-        throw error;
+        console.error('❌ [PROD] Error:', error);
+        return []; // Возвращаем пустой массив вместо ошибки
       }
     } else {
-      // Locally
-      const response = await apiClient.get<Task[]>('/tasks');
-      return response.data;
+      // Для локальной разработки
+      console.log('💻 [DEV] Using axios...');
+      try {
+        const response = await apiClient.get('/tasks');
+        console.log('✅ [DEV] Tasks data:', response.data);
+
+        if (!Array.isArray(response.data)) {
+          console.error('❌ Response data is not an array:', response.data);
+          return [];
+        }
+
+        return response.data;
+      } catch (error) {
+        console.error('❌ [DEV] Error:', error);
+        return [];
+      }
     }
   },
 
-  async getByProjectId(projectId: string) {
-    if (import.meta.env.PROD) {
-      // On GitHub Pages - filter
-      try {
-        const allTasks = await this.getAll();
-        return allTasks.filter((task: Task) =>
-          task.projectId.toString() === projectId.toString()
-        );
-      } catch (error) {
-        console.error(`Error fetching tasks for project ${projectId}:`, error);
-        throw error;
-      }
-    } else {
-      // Locally
-      const response = await apiClient.get<Task[]>(`/tasks?projectId=${projectId}`);
-      return response.data;
+  async getByProjectId(projectId: string): Promise<Task[]> {
+    try {
+      const allTasks = await this.getAll();
+      return allTasks.filter(task =>
+        task.projectId.toString() === projectId.toString()
+      );
+    } catch (error) {
+      console.error(`Error fetching tasks for project ${projectId}:`, error);
+      return [];
     }
   },
 
-  // Other methods only for development
   create(task: Omit<Task, 'id'>) {
     if (!import.meta.env.PROD) {
       return apiClient.post<Task>('/tasks', task);
     }
-    throw new Error('Create task not supported in production');
+    return Promise.reject(new Error('Create not supported in production'));
   },
 
   update(id: number, task: Partial<Task>) {
     if (!import.meta.env.PROD) {
       return apiClient.patch<Task>(`/tasks/${id}`, task);
     }
-    throw new Error('Update task not supported in production');
+    return Promise.reject(new Error('Update not supported in production'));
   },
 
   delete(id: number) {
     if (!import.meta.env.PROD) {
       return apiClient.delete(`/tasks/${id}`);
     }
-    throw new Error('Delete task not supported in production');
+    return Promise.reject(new Error('Delete not supported in production'));
   }
 };
