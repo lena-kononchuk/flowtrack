@@ -149,9 +149,9 @@
       "projectId": "3",
       "name": "Design sales pipeline interface",
       "description": "Create Kanban-style board for visualizing deal stages with drag-and-drop functionality",
-      "assignee": "Robert Taylor",
-      "status": "done",
-      "dueDate": "2024-02-15",
+      "assignee": "Jane Smith",
+      "status": "in-progress",
+      "dueDate": "2025-12-26",
       "order": 0
     },
     {
@@ -160,9 +160,9 @@
       "name": "Build customer profile pages",
       "description": "Create detailed customer profiles with contact info, interaction timeline, notes, and related deals",
       "assignee": "Lisa Anderson",
-      "status": "done",
+      "status": "todo",
       "dueDate": "2024-02-22",
-      "order": 1
+      "order": 0
     },
     {
       "id": "14",
@@ -172,7 +172,7 @@
       "assignee": "Robert Taylor",
       "status": "done",
       "dueDate": "2024-03-01",
-      "order": 2
+      "order": 0
     },
     {
       "id": "15",
@@ -182,7 +182,7 @@
       "assignee": "Lisa Anderson",
       "status": "done",
       "dueDate": "2024-03-08",
-      "order": 3
+      "order": 1
     },
     {
       "id": "16",

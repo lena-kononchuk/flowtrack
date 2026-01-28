@@ -1,87 +1,133 @@
-# FlowTrack - Task Management Application
+# FlowTrack
 
-A modern task management application built with Vue 3, TypeScript, and Vite. Track your projects and tasks with an intuitive Kanban board and table view.
+Modern project and task management application built with Vue 3, TypeScript, and Pinia. Organize your projects with flexible table and kanban board views.
 
-##  Live Demo
+🔗 **[Live Demo](https://lena-kononchuk.github.io/flowtrack/)**
 
-[View Live Application](https://lena-kononchuk.github.io/flowtrack/)
+## Features
 
-##  Features
+- 📊 **Project Management** - Create and track multiple projects
+- ✅ **Task Tracking** - Add, edit, and organize tasks within projects
+- 📋 **Dual View Modes** - Switch between Table and Kanban board views
+- 🎯 **Drag & Drop** - Reorder tasks with intuitive drag-and-drop
+- 🏷️ **Task Statuses** - Todo, In Progress, Done, Blocked
+- 💾 **Local Storage** - Automatic data persistence
+- 📱 **Responsive Design** - Works on desktop, tablet, and mobile
+- 🎨 **Clean UI** - Modern interface with FontAwesome icons
 
--  Project management with status tracking
--  Task management with drag-and-drop Kanban board
--  Alternative table view for tasks
--  Search and filter functionality
--  Local data persistence
+## Tech Stack
 
-##  Tech Stack
+- **Vue 3** - Progressive JavaScript framework
+- **TypeScript** - Type-safe development
+- **Pinia** - State management
+- **Vue Router** - Client-side routing
+- **Vite** - Fast build tool
+- **SCSS** - Styling with variables and mixins
+- **Axios** - HTTP client
+- **vuedraggable** - Drag and drop functionality
+- **JSON Server** - Mock REST API
 
-- **Frontend:** Vue 3, TypeScript, Vite
-- **Styling:** SCSS, Flexboxgrid
-- **State Management:** Pinia
-- **Backend:** JSON Server (mock API)
-- **HTTP Client:** Axios
-- **Drag & Drop:** vuedraggable
+## Getting Started
 
-##  Installation
+### Prerequisites
 
-### Steps
+- Node.js 18+ 
+- npm or yarn
 
-1. Clone the repository:
+### Installation
+
 ```bash
-git clone  https://lena-kononchuk.github.io/flowtrack/
+# Clone repository
+git clone https://github.com/lena-kononchuk/flowtrack.git
 cd flowtrack
-```
 
-2. Install dependencies:
-```bash
+# Install dependencies
 npm install
+
+# Start development server
+npm run dev
+
+# Start JSON server (in another terminal)
+npx json-server --watch db.json --port 3001
 ```
 
-3. Start the development servers:
+The app will be available at `http://localhost:5173`
+
+## Build for Production
+
 ```bash
-npm run dev:all
+# Build
+npm run build
+
+# Preview production build
+npm run preview
 ```
 
+## Deployment to GitHub Pages
 
-##  Project Structure
+```bash
+npm run deploy
+```
+
+## Project Structure
+
 ```
 flowtrack/
 ├── src/
-│   ├── api/              # API service layers
+│   ├── api/              # API service layer
 │   ├── components/       # Vue components
 │   │   ├── common/       # Shared components
-│   │   ├── projects/     # Project-related components
-│   │   └── tasks/        # Task-related components
+│   │   ├── projects/     # Project components
+│   │   └── tasks/        # Task components
 │   ├── composables/      # Vue composables
-│   ├── router/           # Vue Router configuration
+│   ├── router/           # Vue Router config
 │   ├── stores/           # Pinia stores
-│   ├── types/            # TypeScript type definitions
+│   ├── styles/           # SCSS styles
+│   ├── types/            # TypeScript types
 │   ├── views/            # Page components
-│   └── main.ts           # Application entry point
-├── db.json               # Mock database for JSON Server
-└── package.json
+│   └── main.ts           # App entry point
+├── public/               # Static assets
+└── db.json               # JSON Server database
 ```
 
-##  Usage
+## Key Features Explained
 
-### Managing Projects
+### Project Management
+- Create projects with names and descriptions
+- Track project status (Planned, Pending, Active, Completed)
+- View task count per project
+- Navigate to detailed project view
 
-1. Click "Add Project" button on the home page
-2. Fill in project name and description
-3. Click a project to view its tasks
+### Task Views
 
-### Managing Tasks
+**Table View:**
+- List all tasks in a sortable table
+- Quick status updates
+- Inline editing
+- Reorder with drag & drop
 
-1. Inside a project, click "Add Task" in any column
-2. Fill in task details (name, description, assignee, due date)
-3. Drag and drop tasks between columns to change status
-4. Click "Edit" on a task to modify it
-5. Switch between Kanban and Table views using the toggle buttons
+**Kanban View:**
+- Visual board with status columns
+- Drag tasks between columns
+- Status automatically updates on drop
+- Add tasks directly to specific columns
 
-### Search and Filter
+### Data Persistence
+- Automatic save to localStorage
+- Sync with backend API (JSON Server)
+- Offline-first approach
 
-- Use the search bar to find projects by name
-- Filter projects by status using the dropdown
-- In table view, sort columns by clicking column headers
+## Scripts
 
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run deploy` - Deploy to GitHub Pages
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+MIT
