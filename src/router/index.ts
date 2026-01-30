@@ -3,7 +3,7 @@ import ProjectsList from '@/views/ProjectsList.vue'
 import ProjectDetail from '@/views/ProjectDetail.vue'
 
 const router = createRouter({
-  history: createWebHistory('/FlowBoard-New/'),
+  history: createWebHistory('/FlowBoard/'),
   routes: [
     {
       path: '/',
